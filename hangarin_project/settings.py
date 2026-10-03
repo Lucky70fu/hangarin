@@ -27,6 +27,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     "RalFreeey.pythonanywhere.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'taskmanager',
     "allauth",
     "allauth.account",
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
