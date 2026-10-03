@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-b!9o1e!8xje-u+8qtb8s8+r6u=nyc+)*f366hk_&=g%dvym*-y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "RalFreeey.pythonanywhere.com",
+]
 
 
 # Application definition
@@ -141,4 +143,8 @@ SOCIALACCOUNT_LOGIN_ON_GET = False
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://RalFreeey.pythonanywhere.com",
 ]
