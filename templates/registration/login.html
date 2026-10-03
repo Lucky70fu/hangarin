@@ -1,133 +1,524 @@
-<!DOCTYPE html>
+{% load socialaccount %}
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Hangarin</title>
 
-<style>
-    * {
-        box-sizing: border-box;
-    }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f4f7fb;
-        color: #1f2937;
-    }
+    <title>Login - Hangarin</title>
 
-    .login-card {
-        width: min(420px, 92%);
-        padding: 40px;
-        background: white;
-        border-radius: 18px;
-        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
-    }
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    .brand {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+    <style>
+        :root {
+            --page-bg: #f1f5f9;
+            --card-bg: #ffffff;
 
-    .brand h1 {
-        margin: 0;
-        font-size: 32px;
-        color: #2563eb;
-    }
+            --border: #e2e8f0;
 
-    .brand p {
-        margin: 8px 0 0;
-        color: #6b7280;
-    }
+            --text-main: #1e293b;
+            --text-muted: #64748b;
 
-    .form-group {
-        margin-bottom: 20px;
-    }
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
 
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-    }
+            --danger-bg: #fee2e2;
+            --danger-text: #b91c1c;
+        }
 
-    input {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        font-size: 15px;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    input:focus {
-        outline: none;
-        border-color: #2563eb;
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
 
-    .error {
-        margin-bottom: 18px;
-        padding: 12px;
-        border-radius: 10px;
-        background: #fee2e2;
-        color: #991b1b;
-        font-size: 14px;
-    }
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    button {
-        width: 100%;
-        padding: 13px;
-        border: none;
-        border-radius: 10px;
-        background: #2563eb;
-        color: white;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-    }
+            padding: 24px;
 
-    button:hover {
-        background: #1d4ed8;
-    }
-</style>
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
 
+            background: var(--page-bg);
+            color: var(--text-main);
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+
+            padding: 36px;
+
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-icon {
+            width: 56px;
+            height: 56px;
+
+            margin: 0 auto 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background: #dbeafe;
+            color: var(--accent);
+        }
+
+        .brand-icon svg {
+            width: 29px;
+            height: 29px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .brand p {
+            margin: 7px 0 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .error-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+
+            background: var(--danger-bg);
+            color: var(--danger-text);
+
+            border-radius: 9px;
+            padding: 11px 12px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+        }
+
+        .error-message svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .field {
+            margin-bottom: 17px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper > svg {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 17px;
+            height: 17px;
+
+            color: var(--text-muted);
+
+            pointer-events: none;
+        }
+
+        .field input {
+            width: 100%;
+
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            padding: 12px 13px 12px 40px;
+
+            outline: none;
+
+            color: var(--text-main);
+            background: white;
+
+            transition: 0.2s ease;
+        }
+
+        .field input:focus {
+            border-color: var(--accent);
+
+            box-shadow:
+                0 0 0 3px rgba(59, 130, 246, 0.10);
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 11px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+            background: transparent;
+
+            color: var(--text-muted);
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 4px;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-main);
+        }
+
+        .password-toggle svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .sign-in-button {
+            width: 100%;
+
+            border: none;
+            border-radius: 9px;
+
+            background: var(--accent);
+            color: white;
+
+            padding: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+        .sign-in-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .sign-in-button svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin: 25px 0 18px;
+
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .social-button {
+            width: 100%;
+
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            background: white;
+            color: var(--text-main);
+
+            padding: 11px;
+
+            margin-bottom: 9px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition: 0.2s ease;
+        }
+
+        .social-button:hover {
+            background: #f8fafc;
+        }
+
+        .social-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .google-button {
+            color: #334155;
+        }
+
+        .github-button {
+            color: #111827;
+        }
+
+        .footer {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 28px 22px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+
+<div class="login-wrapper">
+
     <div class="login-card">
+
+        <!-- BRAND -->
         <div class="brand">
-            <h1>Hangarin</h1>
-            <p>Task &amp; To-Do Manager</p>
+
+            <div class="brand-icon">
+                <i data-lucide="check-square"></i>
+            </div>
+
+            <h1>Welcome to Hangarin</h1>
+
+            <p>
+                Sign in to manage your tasks.
+            </p>
+
         </div>
 
 
-    {% if form.errors %}
-        <div class="error">
-            Your username or password is incorrect.
-            Please try again.
+        <!-- ERRORS -->
+        {% if form.errors %}
+
+            <div class="error-message">
+
+                <i data-lucide="circle-alert"></i>
+
+                <span>
+                    Your username or password is incorrect.
+                    Please try again.
+                </span>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- LOGIN FORM -->
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="field">
+
+                <label for="id_username">
+                    Username
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i data-lucide="user"></i>
+
+                    <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        autocomplete="username"
+                        placeholder="Enter your username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="id_password">
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i data-lucide="lock-keyhole"></i>
+
+                    <input
+                        type="password"
+                        name="password"
+                        id="id_password"
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="passwordToggle"
+                        aria-label="Show password"
+                    >
+                        <i data-lucide="eye"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="sign-in-button"
+            >
+                <i data-lucide="log-in"></i>
+                Sign In
+            </button>
+
+        </form>
+
+
+        <!-- SOCIAL LOGIN -->
+        <div class="divider">
+            OR
         </div>
-    {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
 
-        <div class="form-group">
-            <label for="id_username">Username</label>
-            {{ form.username }}
+        <form
+            method="post"
+            action="{% provider_login_url 'google' %}"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="social-button google-button"
+            >
+                <i data-lucide="chrome"></i>
+                Continue with Google
+            </button>
+
+        </form>
+
+
+        <form
+            method="post"
+            action="{% provider_login_url 'github' %}"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="social-button github-button"
+            >
+                <i data-lucide="github"></i>
+                Continue with GitHub
+            </button>
+
+        </form>
+
+
+        <div class="footer">
+            Hangarin · Task &amp; To-Do Manager
         </div>
 
-        <div class="form-group">
-            <label for="id_password">Password</label>
-            {{ form.password }}
-        </div>
+    </div>
 
-        <button type="submit">Sign In</button>
-    </form>
 </div>
+
+
+<script>
+    lucide.createIcons();
+
+    const passwordInput = document.getElementById("id_password");
+    const passwordToggle = document.getElementById("passwordToggle");
+
+    passwordToggle.addEventListener("click", function () {
+        const isPassword =
+            passwordInput.type === "password";
+
+        passwordInput.type =
+            isPassword ? "text" : "password";
+
+        passwordToggle.setAttribute(
+            "aria-label",
+            isPassword
+                ? "Hide password"
+                : "Show password"
+        );
+
+        passwordToggle.innerHTML = isPassword
+            ? '<i data-lucide="eye-off"></i>'
+            : '<i data-lucide="eye"></i>';
+
+        lucide.createIcons();
+    });
+</script>
 
 </body>
 </html>

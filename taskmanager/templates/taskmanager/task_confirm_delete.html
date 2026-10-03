@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Delete Task | Hangarin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .card {
+            width: min(500px, 92%);
+            padding: 35px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .warning {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button,
+        a {
+            padding: 12px 18px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .delete-button {
+            border: none;
+            background: #dc2626;
+            color: white;
+        }
+
+        .delete-button:hover {
+            background: #b91c1c;
+        }
+
+        .cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .cancel:hover {
+            background: #e5e7eb;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Delete Task?</h1>
+
+    <div class="warning">
+        Are you sure you want to delete
+        <strong>{{ task.title }}</strong>?
+        This action cannot be undone.
+    </div>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="delete-button"
+            >
+                Delete Task
+            </button>
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
