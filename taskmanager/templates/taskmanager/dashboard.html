@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard | Hangarin</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 240px;
+        padding: 28px 20px;
+        background: #111827;
+        color: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand {
+        margin-bottom: 40px;
+    }
+
+    .brand h1 {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .brand p {
+        margin: 6px 0 0;
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    .nav-link {
+        display: block;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        color: #d1d5db;
+        text-decoration: none;
+    }
+
+    .nav-link.active,
+    .nav-link:hover {
+        background: #1f2937;
+        color: white;
+    }
+
+    .sidebar-bottom {
+        margin-top: auto;
+    }
+
+    .logout-form {
+        margin: 0;
+    }
+
+    .logout-button {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1px solid #374151;
+        border-radius: 8px;
+        background: transparent;
+        color: #d1d5db;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .logout-button:hover {
+        background: #1f2937;
+        color: white;
+    }
+
+    .main {
+        flex: 1;
+        padding: 35px;
+        overflow-x: auto;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .header h2 {
+        margin: 0;
+        font-size: 30px;
+    }
+
+    .header p {
+        margin: 7px 0 0;
+        color: #6b7280;
+    }
+
+    .user-badge {
+        padding: 10px 14px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        font-weight: 600;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        padding: 22px;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    }
+
+    .card-label {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .card-value {
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .section {
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+    }
+
+    .section-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-header h3 {
+        margin: 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 15px 18px;
+        text-align: left;
+        border-bottom: 1px solid #f0f0f0;
+        white-space: nowrap;
+    }
+
+    th {
+        background: #f9fafb;
+        color: #6b7280;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    td {
+        font-size: 14px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status {
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    .priority {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .category {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .empty {
+        padding: 35px;
+        text-align: center;
+        color: #6b7280;
+    }
+
+    @media (max-width: 1000px) {
+        .cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .sidebar {
+            width: 200px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .layout {
+            display: block;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+        .cards {
+            grid-template-columns: 1fr;
+        }
+
+        .header {
+            display: block;
+        }
+
+        .user-badge {
+            display: inline-block;
+            margin-top: 15px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="brand">
+        <h1>Hangarin</h1>
+        <p>Task &amp; To-Do Manager</p>
+    </div>
+
+    <a href="{% url 'dashboard' %}" class="nav-link active">
+        Dashboard
+    </a>
+
+    <a href="/admin/" class="nav-link">
+        Admin
+    </a>
+
+    <div class="sidebar-bottom">
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">
+                Sign Out
+            </button>
+        </form>
+    </div>
+</aside>
+
+<main class="main">
+
+    <header class="header">
+        <div>
+            <h2>Dashboard</h2>
+            <p>Manage your tasks and stay organized.</p>
+        </div>
+
+        <div class="user-badge">
+            {{ request.user.username }}
+        </div>
+    </header>
+
+    <section class="cards">
+
+        <div class="card">
+            <div class="card-label">Total Tasks</div>
+            <div class="card-value">{{ total_tasks }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Pending</div>
+            <div class="card-value">{{ pending_tasks }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">In Progress</div>
+            <div class="card-value">{{ in_progress_tasks }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Completed</div>
+            <div class="card-value">{{ completed_tasks }}</div>
+        </div>
+
+    </section>
+
+    <section class="section">
+
+        <div class="section-header">
+            <h3>Your Tasks</h3>
+        </div>
+
+        {% if tasks %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Category</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>
+                                <strong>{{ task.title }}</strong>
+                            </td>
+
+                            <td>
+                                <span class="badge status">
+                                    {{ task.status }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge priority">
+                                    {{ task.priority.name }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge category">
+                                    {{ task.category.name }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ task.deadline|date:"M d, Y h:i A" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty">
+                No tasks available.
+            </div>
+        {% endif %}
+
+    </section>
+
+</main>
+
+</div>
+
+</body>
+</html>

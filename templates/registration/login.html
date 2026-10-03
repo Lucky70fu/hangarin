@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Hangarin</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+    }
+
+    .login-card {
+        width: min(420px, 92%);
+        padding: 40px;
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+    }
+
+    .brand {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .brand h1 {
+        margin: 0;
+        font-size: 32px;
+        color: #2563eb;
+    }
+
+    .brand p {
+        margin: 8px 0 0;
+        color: #6b7280;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #2563eb;
+    }
+
+    .error {
+        margin-bottom: 18px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fee2e2;
+        color: #991b1b;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+    }
+</style>
+
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="brand">
+            <h1>Hangarin</h1>
+            <p>Task &amp; To-Do Manager</p>
+        </div>
+
+
+    {% if form.errors %}
+        <div class="error">
+            Your username or password is incorrect.
+            Please try again.
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">Password</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit">Sign In</button>
+    </form>
+</div>
+
+</body>
+</html>
