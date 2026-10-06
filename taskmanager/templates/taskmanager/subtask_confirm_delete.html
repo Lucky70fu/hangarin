@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete SubTask | Hangarin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .warning {
+            color: #dc2626;
+            margin-bottom: 28px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        button,
+        a {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            background: #dc2626;
+            color: white;
+        }
+
+        button:hover {
+            background: #b91c1c;
+        }
+
+        a {
+            background: #e5e7eb;
+            color: #374151;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Delete SubTask?</h1>
+
+            <p class="warning">
+                Are you sure you want to delete
+                <strong>{{ subtask.title }}</strong>?
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="actions">
+                    <button type="submit">Delete SubTask</button>
+                    <a href="{% url 'dashboard' %}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

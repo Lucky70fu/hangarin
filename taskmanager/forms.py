@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task
+from .models import Task, SubTask
 
 
 class TaskForm(forms.ModelForm):
@@ -46,3 +46,19 @@ class TaskForm(forms.ModelForm):
             self.initial["deadline"] = self.instance.deadline.strftime(
                 "%Y-%m-%dT%H:%M"
             )
+
+class SubTaskForm(forms.ModelForm):
+    class Meta:
+        model = SubTask
+        fields = [
+            "title",
+            "status",
+        ]
+
+        widgets = {
+            "title": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter subtask title",
+                }
+            ),
+        }
