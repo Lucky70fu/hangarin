@@ -4,8 +4,8 @@ from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .forms import TaskForm, SubTaskForm
-from .models import Category, Priority, SubTask, Task
+from .forms import TaskForm, SubTaskForm, NoteForm
+from .models import Category, Priority, SubTask, Task, Note
 
 
 @login_required
@@ -18,7 +18,12 @@ def dashboard(request):
             "subtask_set",
             queryset=SubTask.objects.order_by("created_at"),
             to_attr="dashboard_subtasks",
-        )
+        ),
+        Prefetch(
+            "note_set",
+            queryset=Note.objects.order_by("-created_at"),
+            to_attr="dashboard_notes",
+        ),
     )
 
     search_query = request.GET.get("q", "").strip()
@@ -222,5 +227,75 @@ def subtask_delete(request, subtask_id):
         "taskmanager/subtask_confirm_delete.html",
         {
             "subtask": subtask,
+        },
+    )
+
+@login_required
+def note_create(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    if request.method == "POST":
+        form = NoteForm(request.POST)
+
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.task = task
+            note.save()
+            return redirect("dashboard")
+
+    else:
+        form = NoteForm()
+
+    return render(
+        request,
+        "taskmanager/note_form.html",
+        {
+            "form": form,
+            "task": task,
+            "page_title": "Add Note",
+            "button_text": "Add Note",
+        },
+    )
+
+
+@login_required
+def note_edit(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+
+    if request.method == "POST":
+        form = NoteForm(request.POST, instance=note)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+
+    else:
+        form = NoteForm(instance=note)
+
+    return render(
+        request,
+        "taskmanager/note_form.html",
+        {
+            "form": form,
+            "task": note.task,
+            "page_title": "Edit Note",
+            "button_text": "Save Changes",
+        },
+    )
+
+
+@login_required
+def note_delete(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+
+    if request.method == "POST":
+        note.delete()
+        return redirect("dashboard")
+
+    return render(
+        request,
+        "taskmanager/note_confirm_delete.html",
+        {
+            "note": note,
         },
     )

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task, SubTask
+from .models import Task, SubTask, Note
 
 
 class TaskForm(forms.ModelForm):
@@ -59,6 +59,22 @@ class SubTaskForm(forms.ModelForm):
             "title": forms.TextInput(
                 attrs={
                     "placeholder": "Enter subtask title",
+                }
+            ),
+        }
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = [
+            "content",
+        ]
+
+        widgets = {
+            "content": forms.Textarea(
+                attrs={
+                    "placeholder": "Write a note...",
+                    "rows": 5,
                 }
             ),
         }
