@@ -465,22 +465,10 @@
         </form>
 
 
-        <form
-            method="post"
-            action="{% provider_login_url 'github' %}"
-            id="githubLoginForm"
-        >
-            {% csrf_token %}
-
-            <button
-                type="submit"
-                class="social-button github-button"
-                id="githubLoginButton"
-            >
-                <i data-lucide="github"></i>
-                Continue with GitHub
-            </button>
-        </form>
+        <a href="{% provider_login_url 'github' %}" class="social-button github-button">
+            <i data-lucide="github"></i>
+            Continue with GitHub
+        </a>
 
 
         <div class="footer">
