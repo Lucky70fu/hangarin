@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-b!9o1e!8xje-u+8qtb8s8+r6u=nyc+)*f366hk_&=g%dvym*-y
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "ralfreeey.pythonanywhere.com",
     "RalFreeey.pythonanywhere.com",
     "localhost",
     "127.0.0.1",
@@ -158,6 +159,7 @@ AUTHENTICATION_BACKENDS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://RalFreeey.pythonanywhere.com",
+    "https://ralfreeey.pythonanywhere.com",
 ]
 
 PWA_APP_NAME = 'Hangarin'
@@ -172,3 +174,23 @@ PWA_SERVICE_WORKER_PATH = os.path.join(
     BASE_DIR,
     'serviceworker.js'
 )
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "allauth": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+        "allauth.socialaccount": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
+}
