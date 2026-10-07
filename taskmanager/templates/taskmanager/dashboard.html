@@ -762,6 +762,20 @@
             font-size: 14px;
         }
 
+        .dashboard-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
         /* =========================
            PAGINATION
         ========================= */
@@ -893,6 +907,21 @@
         <a href="{% url 'task_create' %}" class="nav-link">
             <i data-lucide="plus-circle"></i>
             <span>Add Task</span>
+        </a>
+
+        <a href="{% url 'category_create' %}" class="nav-link">
+            <i data-lucide="folder-plus"></i>
+            <span>Add Category</span>
+        </a>
+
+        <a href="{% url 'priority_create' %}" class="nav-link">
+            <i data-lucide="flag"></i>
+            <span>Add Priority</span>
+        </a>
+        
+        <a href="{% url 'manage_categories_priorities' %}" class="nav-link">
+            <i data-lucide="settings-2"></i>
+            <span>Manage Categories & Priorities</span>
         </a>
 
         <div class="filter-section">

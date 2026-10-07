@@ -468,18 +468,18 @@
         <form
             method="post"
             action="{% provider_login_url 'github' %}"
+            id="githubLoginForm"
         >
-
             {% csrf_token %}
 
             <button
                 type="submit"
                 class="social-button github-button"
+                id="githubLoginButton"
             >
                 <i data-lucide="github"></i>
                 Continue with GitHub
             </button>
-
         </form>
 
 

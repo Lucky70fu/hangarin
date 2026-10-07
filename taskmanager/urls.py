@@ -13,4 +13,11 @@ urlpatterns = [
     path("tasks/<int:task_id>/notes/add/", views.note_create, name="note_create"),
     path("notes/<int:note_id>/edit/", views.note_edit, name="note_edit"),
     path("notes/<int:note_id>/delete/", views.note_delete, name="note_delete"),
+    path("categories/add/", views.category_create, name="category_create"),
+    path("categories/<int:category_id>/edit/", views.category_edit, name="category_edit"),
+    path("categories/<int:category_id>/delete/", views.category_delete, name="category_delete",),
+    path("priorities/add/", views.priority_create, name="priority_create"),
+    path("priorities/<int:priority_id>/edit/", views.priority_edit, name="priority_edit"),
+    path("priorities/<int:priority_id>/delete/", views.priority_delete, name="priority_delete"),
+    path("manage/categories-priorities/", views.manage_categories_priorities, name="manage_categories_priorities"),
 ]

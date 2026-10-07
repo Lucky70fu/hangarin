@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task, SubTask, Note
+from .models import Task, SubTask, Note, Category, Priority
 
 
 class TaskForm(forms.ModelForm):
@@ -75,6 +75,37 @@ class NoteForm(forms.ModelForm):
                 attrs={
                     "placeholder": "Write a note...",
                     "rows": 5,
+                }
+            ),
+        }
+
+class PriorityForm(forms.ModelForm):
+    class Meta:
+        model = Priority
+        fields = [
+            "name",
+        ]
+
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter priority name",
+                }
+            ),
+        }
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = [
+            "name",
+        ]
+
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter category name",
                 }
             ),
         }

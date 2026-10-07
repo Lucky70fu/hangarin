@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Prefetch, Q
+from django.db.models import Count, Exists, OuterRef, Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .forms import TaskForm, SubTaskForm, NoteForm
+from .forms import TaskForm, SubTaskForm, NoteForm, PriorityForm, CategoryForm
 from .models import Category, Priority, SubTask, Task, Note
 
 
@@ -297,5 +297,190 @@ def note_delete(request, note_id):
         "taskmanager/note_confirm_delete.html",
         {
             "note": note,
+        },
+    )
+
+@login_required
+def priority_create(request):
+    if request.method == "POST":
+        form = PriorityForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+
+    else:
+        form = PriorityForm()
+
+    return render(
+        request,
+        "taskmanager/priority_form.html",
+        {
+            "form": form,
+            "page_title": "Add Priority",
+            "button_text": "Create Priority",
+        },
+    )
+
+
+@login_required
+def priority_edit(request, priority_id):
+    priority = get_object_or_404(Priority, id=priority_id)
+
+    if request.method == "POST":
+        form = PriorityForm(request.POST, instance=priority)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+
+    else:
+        form = PriorityForm(instance=priority)
+
+    return render(
+        request,
+        "taskmanager/priority_form.html",
+        {
+            "form": form,
+            "page_title": "Edit Priority",
+            "button_text": "Save Changes",
+        },
+    )
+
+
+@login_required
+def priority_delete(request, priority_id):
+    priority = get_object_or_404(Priority, pk=priority_id)
+
+    task_count = Task.objects.filter(priority=priority).count()
+
+    if task_count > 0:
+        return render(
+            request,
+            "taskmanager/priority_confirm_delete.html",
+            {
+                "priority": priority,
+                "task_count": task_count,
+                "blocked": True,
+            },
+        )
+
+    if request.method == "POST":
+        priority.delete()
+        return redirect("manage_categories_priorities")
+
+    return render(
+        request,
+        "taskmanager/priority_confirm_delete.html",
+        {
+            "priority": priority,
+            "task_count": 0,
+            "blocked": False,
+        },
+    )
+
+
+@login_required
+def category_create(request):
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+
+    else:
+        form = CategoryForm()
+
+    return render(
+        request,
+        "taskmanager/category_form.html",
+        {
+            "form": form,
+            "page_title": "Add Category",
+            "button_text": "Create Category",
+        },
+    )
+
+
+@login_required
+def category_edit(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+
+    else:
+        form = CategoryForm(instance=category)
+
+    return render(
+        request,
+        "taskmanager/category_form.html",
+        {
+            "form": form,
+            "page_title": "Edit Category",
+            "button_text": "Save Changes",
+        },
+    )
+
+
+@login_required
+def category_delete(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+
+    task_count = Task.objects.filter(category=category).count()
+
+    if task_count > 0:
+        return render(
+            request,
+            "taskmanager/category_confirm_delete.html",
+            {
+                "category": category,
+                "task_count": task_count,
+                "blocked": True,
+            },
+        )
+
+    if request.method == "POST":
+        category.delete()
+        return redirect("manage_categories_priorities")
+
+    return render(
+        request,
+        "taskmanager/category_confirm_delete.html",
+        {
+            "category": category,
+            "task_count": 0,
+            "blocked": False,
+        },
+    )
+
+
+@login_required
+def manage_categories_priorities(request):
+    categories = Category.objects.annotate(
+        task_count=Count("task", distinct=True),
+        has_tasks=Exists(
+            Task.objects.filter(category=OuterRef("pk"))
+        ),
+    ).order_by("name")
+
+    priorities = Priority.objects.annotate(
+        task_count=Count("task", distinct=True),
+        has_tasks=Exists(
+            Task.objects.filter(priority=OuterRef("pk"))
+        ),
+    ).order_by("name")
+
+    return render(
+        request,
+        "taskmanager/manage_categories_priorities.html",
+        {
+            "categories": categories,
+            "priorities": priorities,
         },
     )

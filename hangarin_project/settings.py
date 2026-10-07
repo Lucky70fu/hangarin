@@ -149,7 +149,7 @@ MAILERS = {
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
-SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
